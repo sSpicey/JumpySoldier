@@ -55,7 +55,8 @@ void Player::Update(float deltaTime)
     }
 
     if((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && hitTheFloor == true) ||
-       (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && hitTheFloor == true))
+       (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && hitTheFloor == true)||
+       (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && hitTheFloor == true))
     {
         velocity.y = -sqrtf(2.0f * 981.0f * jumpHeight);
         hitTheFloor = false;
