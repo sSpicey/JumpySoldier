@@ -27,7 +27,8 @@ class Player
             sf::RectangleShape getBody();
 
             void CheckActivePlatform(Platform &platform);
-            void RectCheckCollision(Platform &platform);
+            void StaticCheckCollision(Platform &platform);
+            void MovableCheckCollision(Platform &platform, float mass);
 
     private:
         sf::RectangleShape body;
@@ -38,6 +39,6 @@ class Player
         bool hitTheFloor;
         sf::Vector2f velocity;
         float jumpHeight;
-        sf::Vector2f collisionDirection;
+        sf::Vector2f collisionDirection; //sem uso
 };
 

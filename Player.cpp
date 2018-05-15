@@ -3,6 +3,7 @@
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed):
     animation(texture, imageCount, switchTime)
 {
+
     this->speed = speed;
     def_Speed = speed;
     row = 0;
@@ -44,19 +45,17 @@ void Player::Update(float deltaTime)
     //gravidade:
     velocity.y += 981.0f * deltaTime;
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
         velocity.x -= speed;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
         velocity.x += speed;
     }
 
-    if((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && hitTheFloor == true) ||
-       (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && hitTheFloor == true)||
-       (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && hitTheFloor == true))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && hitTheFloor == true)
     {
         velocity.y = -sqrtf(2.0f * 981.0f * jumpHeight);
         hitTheFloor = false;
@@ -89,7 +88,6 @@ void Player::Update(float deltaTime)
     animation.Update(row, deltaTime, faceRight);
     body.setTextureRect(animation.uvRect);
     body.move(velocity * deltaTime);
-
 }
 
 void Player::Draw(sf::RenderWindow& window)
@@ -124,39 +122,90 @@ void Player::CheckActivePlatform(Platform &platform)
 
     else
         platform.set_isActivePlatform(true);
+
+    if(platform.get_isActivePlatform() == true)
+    {
+        cout << (body.getPosition().y - (platform.getBody().getPosition().y + platform.getBody().getSize().y / 2));
+    }
+
+    if(platform.get_isActivePlatform() == true)
+    {
+        if((body.getPosition().y - (platform.getBody().getPosition().y + platform.getBody().getSize().y / 2) < -250.0f))
+        hitTheFloor = false;
+    }
 }
 
-void Player::RectCheckCollision(Platform &platform)
+void Player::StaticCheckCollision(Platform &platform)
 {
     if(body.getGlobalBounds().intersects(platform.getBody().getGlobalBounds()))
     {
-        if(body.getPosition().y > platform.getBody().getPosition().y + platform.getBody().getSize().y / 2)
-        {
-            body.move(0.0, 2.0);
-            velocity.y = 0.0f;
-        }
+            if(body.getPosition().y > platform.getBody().getPosition().y + platform.getBody().getSize().y / 2)
+            {
+                body.move(0.0, 1.0);
+                velocity.y = 0.0f;
+            }
 
-        else
-        if(body.getPosition().y < platform.getBody().getPosition().y - platform.getBody().getSize().y / 2)
-        {
-            body.move(0.0, - 2.0);
-            velocity.y = 0.0f;
-            hitTheFloor = true;
-        }
+            else
+            if(body.getPosition().y < platform.getBody().getPosition().y - platform.getBody().getSize().y / 2)
+            {
+                body.move(0.0, - 1.0);
+                velocity.y = 0.0f;
+                hitTheFloor = true;
+            }
 
         else
         if(body.getPosition().x < platform.getBody().getPosition().x - platform.getBody().getSize().x / 2)
         {
-            body.move(- 2.0, 0.0);
+            body.move(- 1.0, 0.0);
             velocity.x = 0.0f;
         }
 
         else
         if(body.getPosition().x > platform.getBody().getPosition().x + platform.getBody().getSize().x / 2)
         {
-            body.move(2.0, 0.0);
+            body.move(1.0, 0.0);
             velocity.x = 0.0f;
         }
     }
 }
 
+void Player::MovableCheckCollision(Platform &platform, float mass)
+{
+    if(abs(mass) > 10.0)
+        mass = 10.0f;
+
+    if(body.getGlobalBounds().intersects(platform.getBody().getGlobalBounds()))
+    {
+
+            if(body.getPosition().y > platform.getBody().getPosition().y + platform.getBody().getSize().y / 2)
+            {
+                body.move(0.0, 1.0);
+                velocity.y = 0.0f;
+            }
+
+            else
+            if(body.getPosition().y < platform.getBody().getPosition().y - platform.getBody().getSize().y / 2)
+            {
+                body.move(0.0, - 1.0);
+                velocity.y = 0.0f;
+                hitTheFloor = true;
+            }
+
+
+        else
+        if(body.getPosition().x < platform.getBody().getPosition().x - platform.getBody().getSize().x / 2)
+        {
+            body.move(- 1.0, 0.0);
+            platform.bodyMove(10.0 - abs(mass) , 0.0f);
+            velocity.x = 0.0f;
+        }
+
+        else
+        if(body.getPosition().x > platform.getBody().getPosition().x + platform.getBody().getSize().x / 2)
+        {
+            body.move(1.0, 0.0);
+            platform.bodyMove(-(10.0 - abs(mass)) , 0.0f);
+            velocity.x = 0.0f;
+        }
+    }
+}

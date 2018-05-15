@@ -28,3 +28,8 @@ void Platform::set_isActivePlatform(bool activePlatform)
 {
     isActivePlatform = activePlatform;
 }
+
+void Platform::bodyMove(float moveX, float moveY)
+{
+    body.move(moveX, moveY);
+}

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Player.h"
 #include "Platform.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -63,10 +64,10 @@ int main()
 
         player.Update(deltaTime);
         view.setCenter(player.GetPosition());
-        player.RectCheckCollision(ground);
-        player.RectCheckCollision(ground2);
-        player.RectCheckCollision(ground3);
-
+        player.StaticCheckCollision(ground);
+        player.StaticCheckCollision(ground2);
+        player.StaticCheckCollision(ground3);
+        //player.MovableCheckCollision(ground, 9.0);
         player.CheckActivePlatform(ground);
         player.CheckActivePlatform(ground2);
         player.CheckActivePlatform(ground3);
@@ -75,6 +76,7 @@ int main()
 
         window.clear(sf::Color(150, 150, 150));
         window.setView(view);
+
         floor.Draw(window);
         player.Draw(window);
         ground.Draw(window);
