@@ -16,6 +16,7 @@ class Platform
 
         bool get_isActivePlatform();
         void set_isActivePlatform(bool activePlatform);
+        void bodyMove(float moveX, float moveY);
 
     private:
         sf::RectangleShape body;
